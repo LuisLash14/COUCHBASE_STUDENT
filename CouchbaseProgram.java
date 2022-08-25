@@ -10,7 +10,6 @@ import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.Scope;
 import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
-import com.couchbase.client.java.kv.UpsertOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
 import java.time.LocalDate;
@@ -85,8 +84,8 @@ while(stop==false){
               JsonObject CursoInfo =  JsonRecuperarCurso(cluster,curso.getName());
               
                 enrollments.add(JsonObject.create()
-                .put("course-id", CursoInfo.getString("id"))
-                .put("date-enrolled", currentDate));               
+                .put("course-id", CursoInfo.getString("id"))//
+                .put("date-enrolled", currentDate));              
             AlumnoInfo.put("Enrollments", enrollments);
             collection1.upsert(AlumnoInfo.getString("id"),AlumnoInfo);//marca  
             }
