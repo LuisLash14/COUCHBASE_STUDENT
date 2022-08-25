@@ -35,9 +35,7 @@ while(stop==false){
     
     switch(opcion){
         case 1 -> {
-            System.out.println("******OPCION 1 AGREGAR UN ESTUDIANTE******");
-            //Conexion conectar = new Conexion();
-            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            System.out.println("******OPCION 1 AGREGAR UN ESTUDIANTE******\n");           
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY           
             AddStudent student = new AddStudent();
             student.ClavesStudent();// INFORMACION DEL ESTUDIANTE
@@ -51,9 +49,7 @@ while(stop==false){
             System.out.println("******ESTUDIANTE AGREGADO CON EXITO******");
         }
         case 2 -> {
-            System.out.println("******OPCION 2 AGREGAR UN CURSO******");
-            //Conexion conectar = new Conexion();
-            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            System.out.println("******OPCION 2 AGREGAR UN CURSO******\n");            
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY 
             AddCourse curso = new AddCourse(); 
             curso.ClavesCourse(); //INFORMACION DEL CURSO
@@ -67,9 +63,7 @@ while(stop==false){
             System.out.println("******CURSO AGREGADO CON EXITO******");
             }
         case 3 -> {
-            System.out.println("******OPCION 3 INSCRIBIR A UN CURSO******");
-            //Conexion conectar = new Conexion();
-            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            System.out.println("******OPCION 3 INSCRIBIR A UN CURSO******\n");         
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY          
             RecuperarStudent alumno = new RecuperarStudent(); 
             RecuperarCurso curso = new RecuperarCurso(); 
