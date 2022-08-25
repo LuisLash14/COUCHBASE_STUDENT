@@ -19,17 +19,25 @@ import java.time.format.DateTimeFormatter;
  * @author SQL CODIGO PARA LLENAR BASE DE DATOS NOSQL  EN COUCHBASE. STUDENT-BUCKET
 */ 
 public class CouchbaseProgram {   
-    public static void main(String[] args) {                            
+    public static void main(String[] args) {  
+    
+    boolean stop = false;
+    String currentDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+
 // INICIO DEL PROGRAMA
+    Conexion conectar = new Conexion();
+    conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+              
+while(stop==false){
     SelectOpcion select = new SelectOpcion();
     select.ObtenCaso();
     int opcion = select.getCaso(); 
-    String currentDate = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
+    
     switch(opcion){
         case 1 -> {
             System.out.println("******OPCION 1 AGREGAR UN ESTUDIANTE******");
-            Conexion conectar = new Conexion();
-            conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            //Conexion conectar = new Conexion();
+            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY           
             AddStudent student = new AddStudent();
             student.ClavesStudent();// INFORMACION DEL ESTUDIANTE
@@ -44,8 +52,8 @@ public class CouchbaseProgram {
         }
         case 2 -> {
             System.out.println("******OPCION 2 AGREGAR UN CURSO******");
-            Conexion conectar = new Conexion();
-            conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            //Conexion conectar = new Conexion();
+            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY 
             AddCourse curso = new AddCourse(); 
             curso.ClavesCourse(); //INFORMACION DEL CURSO
@@ -60,14 +68,12 @@ public class CouchbaseProgram {
             }
         case 3 -> {
             System.out.println("******OPCION 3 INSCRIBIR A UN CURSO******");
-            Conexion conectar = new Conexion();
-            conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
+            //Conexion conectar = new Conexion();
+            //conectar.Credenciales(); //CREDENCIALES DEL CLUSTER
             conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY          
             RecuperarStudent alumno = new RecuperarStudent(); 
             RecuperarCurso curso = new RecuperarCurso(); 
-            //alumno.getKeysStudent();//SOLICITO DATOS DEL ALUMNO
-            //curso.getKeysCurso();//SOLICITO NOMBRE DEL CURSO
-            //curso.getNumCursos();//obtengo numero de cursos           
+            
             Cluster cluster = Cluster.connect(conectar.getHost(),conectar.getUser(),conectar.getPassw());
             Bucket bucket = cluster.bucket(conectar.getD1());      
             Scope scope = bucket.scope(conectar.getD2());     
@@ -76,8 +82,7 @@ public class CouchbaseProgram {
             curso.getNumCursos();//obtengo numero de cursos
             alumno.getKeysStudent();//SOLICITO DATOS DEL ALUMNO
                
-            JsonObject AlumnoInfo = JsonRecuperarStud(cluster,alumno.getName());                       
-                             
+            JsonObject AlumnoInfo = JsonRecuperarStud(cluster,alumno.getName());                                                    
             JsonArray enrollments = JsonArray.create();//
             
             for(int a = 0;a<curso.getNumero();a++ ){
@@ -89,12 +94,19 @@ public class CouchbaseProgram {
             AlumnoInfo.put("Enrollments", enrollments);
             collection1.upsert(AlumnoInfo.getString("id"),AlumnoInfo);//marca  
             }
-            //
+            
             cluster.disconnect();
             System.out.println("******INSCRIPCION EXITOSA******");
             }
-            default -> System.out.println("ESTA OPCION NO EXISTE");
-    }                 
+            case 4 -> {System.out.println("SALIENDO DEL PROGRAMA");
+            stop= true;
+            }
+            default -> {System.out.println("ESTA OPCION NO EXISTE");
+                    
+                    }
+    }  
+}
+    
     }
 
     private static JsonObject JsonRecuperarStud(Cluster cluster, String name) {
