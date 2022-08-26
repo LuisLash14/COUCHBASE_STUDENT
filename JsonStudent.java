@@ -4,6 +4,7 @@
  */
 package com.couchbase.couchbaseprogram;
 import com.couchbase.client.java.Collection;
+import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
 
 /**
@@ -12,9 +13,11 @@ import com.couchbase.client.java.json.JsonObject;
  */
 public class JsonStudent {
     public JsonStudent(Collection collection,String Id,String name,String fecha){
+        JsonArray enrollments = JsonArray.create();//                         
         JsonObject Student = JsonObject.create()
                 .put("name",name)
-                .put("date-of-birth",fecha);
+                .put("date-of-birth",fecha)
+                .put("Enrollments", enrollments);
         
         collection.upsert(Id,Student);
     }
