@@ -10,8 +10,12 @@ import com.couchbase.client.java.Collection;
 import com.couchbase.client.java.Scope;
 import com.couchbase.client.java.json.JsonArray;
 import com.couchbase.client.java.json.JsonObject;
+import com.couchbase.client.java.kv.GetResult;
+import com.couchbase.client.java.kv.MutationResult;
+import com.couchbase.client.java.kv.ReplaceOptions;
 import com.couchbase.client.java.query.QueryOptions;
 import com.couchbase.client.java.query.QueryResult;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 /**
@@ -93,7 +97,43 @@ while(stop==false){
             cluster.disconnect();
             System.out.println("******INSCRIPCION EXITOSA******");
             }
-            case 4 -> {System.out.println("SALIENDO DEL PROGRAMA");
+            case 4 -> {System.out.println("ACTUALIZANDO UN CURSO");
+            RecuperarStudent alumno = new RecuperarStudent(); 
+            RecuperarCurso curso = new RecuperarCurso();           
+            conectar.Context(); //CONTEXTO DEL CLUSTER PARA EL QUERY
+            Cluster cluster = Cluster.connect(conectar.getHost(),conectar.getUser(),conectar.getPassw());
+            Bucket bucket = cluster.bucket(conectar.getD1());      
+            Scope scope = bucket.scope(conectar.getD2());     
+            Collection collection1 = scope.collection(conectar.getD3());
+            //
+            alumno.getKeysStudent();
+            curso.getKeysCurso();
+            String nombre = alumno.getName();
+            String IdCurso = curso.getName();
+            JsonObject AlumnoInfo = JsonRecuperarStud(cluster,alumno.getName());
+            JsonObject CursoInfo =  JsonRecuperarCurso(cluster,curso.getName());
+           
+            // Fetch an existing hotel document
+            GetResult getResult = collection1.get(AlumnoInfo.getString("id")); //obtener el id del alumno "000001"
+            JsonObject existingDoc = getResult.contentAsObject();
+
+            // Get the current CAS value.
+            Long currentCas = getResult.cas();
+            System.out.println("Current CAS:" + currentCas);
+
+            // Add a new review to the reviews array.
+            existingDoc.getArray("Enrollments").add(JsonObject.create()
+                .put("course-id", CursoInfo.get("id"))//cambiar aqui al id del curso   "000002"           
+                .put("date-enrolled", currentDate));
+
+            // Update the document with new data and pass the current CAS value. 
+            MutationResult replaceResult = collection1.replace(AlumnoInfo.getString("id"),existingDoc,ReplaceOptions.replaceOptions().cas(currentCas));//obtener el id del alumno "000001"
+            // Print the new CAS value.
+            System.out.println("New CAS:" + replaceResult.cas());
+            cluster.disconnect();
+            System.out.println("******DATOS ACTUALIZADOS CON EXITO******");
+            }
+            case 5 -> {System.out.println("SALIENDO DEL PROGRAMA");
             stop= true;
             }
             default -> {System.out.println("ESTA OPCION NO EXISTE");
